@@ -10,8 +10,8 @@ const movieSchema = z.object({
 const movieCreateSchema = z.object({
     name: z.string().min(3).max(50),
     description: z.string().optional().nullable(),
-    duration: z.number().positive(),
-    price: z.number().positive(),
+    duration: z.number().min(1),
+    price: z.number().min(1),
 });
 
 const returnMovieSchema = movieSchema.extend({

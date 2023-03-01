@@ -5,7 +5,7 @@ import { IPagination } from "../../interfaces/movies.interfaces";
 import { returnMultipleMoviesSchema } from "../../schemas/movies.schemas";
 
 const listMoviesService = async (query: any): Promise<IPagination> => {
-    if (!query.page) {
+    if (!query.page || query.page % 1 !== 0) {
         query.page = 1;
     }
 
@@ -13,7 +13,7 @@ const listMoviesService = async (query: any): Promise<IPagination> => {
         query.page = 1;
     }
 
-    if (!query.perPage) {
+    if (!query.perPage || query.perPage % 1 !== 0) {
         query.perPage = 5;
     }
 
@@ -64,8 +64,6 @@ const listMoviesService = async (query: any): Promise<IPagination> => {
             duration: "DESC",
         };
     }
-
-    console.log(orderObject);
 
     const baseURL: string = `http://localhost:3000/movies`;
 
