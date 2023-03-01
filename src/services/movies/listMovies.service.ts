@@ -69,7 +69,7 @@ const listMoviesService = async (query: any): Promise<IPagination> => {
 
     const baseURL: string = `http://localhost:3000/movies`;
 
-    let previousPage: string | null = "";
+    let prevPage: string | null = "";
 
     let nextPage: string | null = "";
 
@@ -87,9 +87,9 @@ const listMoviesService = async (query: any): Promise<IPagination> => {
     const movies = returnMultipleMoviesSchema.parse(findMovies);
 
     if (page === 1) {
-        previousPage = null;
+        prevPage = null;
     } else {
-        previousPage = `${baseURL}?page=${page - 1}&perPage=${perPage}`;
+        prevPage = `${baseURL}?page=${page - 1}&perPage=${perPage}`;
     }
 
     if (
@@ -104,7 +104,7 @@ const listMoviesService = async (query: any): Promise<IPagination> => {
     const count: number = countMovies.length;
 
     const pagination: IPagination = {
-        previousPage,
+        prevPage,
         nextPage,
         count: count,
         data: movies,

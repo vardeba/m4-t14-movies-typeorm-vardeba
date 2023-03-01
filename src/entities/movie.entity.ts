@@ -14,7 +14,7 @@ class Movie {
     @Column()
     duration: number;
 
-    @Column()
+    @Column({ type: "integer" })
     price: number;
 }
 
