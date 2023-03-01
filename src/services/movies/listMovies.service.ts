@@ -21,9 +21,9 @@ const listMoviesService = async (query: any): Promise<IPagination> => {
         query.perPage = 5;
     }
 
-    let page: number = Number(query.page) | 1;
+    let page: number = Number(query.page);
 
-    let perPage: number = Number(query.perPage) | 5;
+    let perPage: number = Number(query.perPage);
 
     let orderObject = {};
 
