@@ -5,7 +5,7 @@ import { IPagination } from "../../interfaces/movies.interfaces";
 import { returnMultipleMoviesSchema } from "../../schemas/movies.schemas";
 
 const listMoviesService = async (query: any): Promise<IPagination> => {
-    if (!query.page) {
+    if (!query.page || query.page % 1 !== 0) {
         query.page = 1;
     }
 
@@ -13,7 +13,7 @@ const listMoviesService = async (query: any): Promise<IPagination> => {
         query.page = 1;
     }
 
-    if (!query.perPage) {
+    if (!query.perPage || query.perPage % 1 !== 0) {
         query.perPage = 5;
     }
 
@@ -21,9 +21,9 @@ const listMoviesService = async (query: any): Promise<IPagination> => {
         query.perPage = 5;
     }
 
-    let page: number = Number(query.page) | 1;
+    let page: number = Number(query.page);
 
-    let perPage: number = Number(query.perPage) | 5;
+    let perPage: number = Number(query.perPage);
 
     let orderObject = {};
 
@@ -65,11 +65,9 @@ const listMoviesService = async (query: any): Promise<IPagination> => {
         };
     }
 
-    console.log(orderObject);
-
     const baseURL: string = `http://localhost:3000/movies`;
 
-    let previousPage: string | null = "";
+    let prevPage: string | null = "";
 
     let nextPage: string | null = "";
 
@@ -77,6 +75,8 @@ const listMoviesService = async (query: any): Promise<IPagination> => {
         AppDataSource.getRepository(Movie);
 
     const countMovies: Array<Movie> = await movieRepository.find();
+
+    const count: number = countMovies.length;
 
     const findMovies: Array<Movie> = await movieRepository.find({
         take: perPage,
@@ -87,24 +87,21 @@ const listMoviesService = async (query: any): Promise<IPagination> => {
     const movies = returnMultipleMoviesSchema.parse(findMovies);
 
     if (page === 1) {
-        previousPage = null;
+        prevPage = null;
     } else {
-        previousPage = `${baseURL}?page=${page - 1}&perPage=${perPage}`;
+        prevPage = `${baseURL}?page=${page - 1}&perPage=${perPage}`;
     }
 
-    if (
-        countMovies.length % perPage > 0 &&
-        countMovies.length / perPage > page
-    ) {
+    if (count % perPage > 0 && perPage * page < count) {
+        nextPage = `${baseURL}?page=${page + 1}&perPage=${perPage}`;
+    } else if (perPage === 1 && count > perPage) {
         nextPage = `${baseURL}?page=${page + 1}&perPage=${perPage}`;
     } else {
         nextPage = null;
     }
 
-    const count: number = countMovies.length;
-
     const pagination: IPagination = {
-        previousPage,
+        prevPage,
         nextPage,
         count: count,
         data: movies,

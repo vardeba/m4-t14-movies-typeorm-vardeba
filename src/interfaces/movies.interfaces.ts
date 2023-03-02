@@ -9,7 +9,7 @@ import { DeepPartial, Repository } from "typeorm";
 import { Movie } from "../entities";
 
 interface IPagination {
-    previousPage: string | null;
+    prevPage: string | null;
     nextPage: string | null;
     count: number;
     data: TMoviesReturn | null;

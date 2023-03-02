@@ -10,7 +10,15 @@ const createMovieService = async (movieData: TMovie): Promise<TMovieReturn> => {
         throw new AppError("Invalid value", 404);
     }
 
+    if (Number(movieData.duration) % 1 !== 0) {
+        throw new AppError("Invalid value", 404);
+    }
+
     if (Number(movieData.price) < 1) {
+        throw new AppError("Invalid value", 404);
+    }
+
+    if (Number(movieData.price) % 1 !== 0) {
         throw new AppError("Invalid value", 404);
     }
 
