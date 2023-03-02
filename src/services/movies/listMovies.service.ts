@@ -76,6 +76,8 @@ const listMoviesService = async (query: any): Promise<IPagination> => {
 
     const countMovies: Array<Movie> = await movieRepository.find();
 
+    const count: number = countMovies.length;
+
     const findMovies: Array<Movie> = await movieRepository.find({
         take: perPage,
         skip: perPage * (page - 1),
@@ -90,16 +92,13 @@ const listMoviesService = async (query: any): Promise<IPagination> => {
         prevPage = `${baseURL}?page=${page - 1}&perPage=${perPage}`;
     }
 
-    if (
-        countMovies.length % perPage > 0 &&
-        countMovies.length / perPage > page
-    ) {
+    if (count % perPage > 0 && perPage * page < count) {
+        nextPage = `${baseURL}?page=${page + 1}&perPage=${perPage}`;
+    } else if (perPage === 1 && count > perPage) {
         nextPage = `${baseURL}?page=${page + 1}&perPage=${perPage}`;
     } else {
         nextPage = null;
     }
-
-    const count: number = countMovies.length;
 
     const pagination: IPagination = {
         prevPage,
