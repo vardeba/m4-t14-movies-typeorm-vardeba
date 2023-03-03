@@ -9,6 +9,10 @@ export const ensureNameIsUniqueMiddleware = async (
     res: Response,
     next: NextFunction
 ): Promise<Response | void> => {
+    if (!req.body.name) {
+        return next();
+    }
+
     const movieRepository: Repository<Movie> =
         AppDataSource.getRepository(Movie);
 
